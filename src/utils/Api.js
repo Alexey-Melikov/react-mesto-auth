@@ -76,7 +76,6 @@ class Api {
   }
 
   userAvatarUpdate(userInfo) {
-    console.log(userInfo.url)
     return fetch(`${this.url}/users/me/avatar`, {
       method: "PATCH",
       headers: {
@@ -91,7 +90,7 @@ class Api {
     });
   }
 
-  handleAddCard({name, link}) {
+  handleAddCard({ name, link }) {
     return fetch(`${this.url}/cards`, {
       method: "POST",
       headers: {
