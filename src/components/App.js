@@ -1,8 +1,12 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
-import * as auth from "../utils/auth";
+
+//image =>
+import successImage from "../images/logo/successful-logo.svg";
+import unSuccessImage from "../images/logo/not-successful-logo.svg";
 //Api =>
 import { api } from "../utils/Api.js";
+import * as auth from "../utils/auth";
 // Components =>
 import Header from "./Header";
 import Main from "./Main";
@@ -21,31 +25,54 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 function App() {
   //Стейт =>
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
-  const [isTooltipPopupOpen, setIsTooltipPopupOpen] = React.useState(false);
-  const [isTooltipStatus, setIsTooltipStatus] = React.useState(false);
-  const [selectedCard, setSelectedCard] = React.useState(null);
-  const [currentUser, setCurrentUser] = React.useState({});
-  const [cards, setCards] = React.useState([]);
-  const [loggedIn, setLoggedIn] = React.useState(false);
-  const [headerEmail, setHeaderEmail] = React.useState("");
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [headerEmail, setHeaderEmail] = useState("");
+  const [tooltipStatus, setTooltipStatus] = useState({
+    text: "",
+    image: "",
+  });
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    Promise.all([api.getUserInformation(), api.getInitialCards()])
-      .then(([userData, cards]) => {
-        // Данные профиля =>
-        setCurrentUser(userData);
-        // Запрос карточки =>
-        setCards(cards);
+  //Token check =>
+  useEffect(() => {
+    const jwt = localStorage.getItem("JWT");
+    if (!jwt) {
+      return;
+    }
+    auth
+      .getContent(jwt)
+      .then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setHeaderEmail(res.data.email);
+          navigate("/");
+        }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+
+  useEffect(() => {
+    if (loggedIn) {
+      Promise.all([api.getUserInformation(), api.getInitialCards()])
+        .then(([userData, cards]) => {
+          // Данные профиля =>
+          setCurrentUser(userData);
+          // Запрос карточки =>
+          setCards(cards);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [loggedIn]);
 
   //Клик на карточку =>
   function handleCardClick(card) {
@@ -76,7 +103,6 @@ function App() {
     setIsTooltipPopupOpen(false);
     setSelectedCard(null);
   }
-
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
@@ -139,19 +165,26 @@ function App() {
       .register(email, password)
       .then((res) => {
         if (res) {
-          setIsTooltipStatus(true);
           handleTooltipPopupOpen();
           navigate("/sign-in");
+          setTooltipStatus({
+            text: "Вы успешно зарегистрировались!",
+            image: successImage,
+          });
         }
       })
       .catch((err) => {
         console.log(err);
-        setIsTooltipStatus(false);
+        setTooltipStatus({
+          text: "Что-то пошло не так! Попробуйте ещё раз.",
+          image: unSuccessImage,
+        });
       })
       .finally(() => {
         handleTooltipPopupOpen();
       });
   }
+
   // authorization
   function handleAuthorize(email, password) {
     auth
@@ -166,7 +199,10 @@ function App() {
       })
       .catch((err) => {
         console.log(err);
-        setIsTooltipStatus(false);
+        setTooltipStatus({
+          text: "Что-то пошло не так! Попробуйте ещё раз.",
+          image: unSuccessImage,
+        });
         handleTooltipPopupOpen();
       });
   }
@@ -176,29 +212,6 @@ function App() {
     localStorage.removeItem("JWT");
     navigate("/sign-in");
   }
-
-  const tokenCheck = () => {
-    const jwt = localStorage.getItem("JWT");
-    if (!jwt) {
-      return;
-    }
-    auth
-      .getContent(jwt)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setHeaderEmail(res.data.email);
-          navigate("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  useEffect(() => {
-    tokenCheck();
-  }, []);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -238,7 +251,7 @@ function App() {
           <InfoTooltip
             onClose={closeAllPopups}
             isOpen={isTooltipPopupOpen}
-            tooltipStatus={isTooltipStatus}
+            tooltipStatus={tooltipStatus}
           />
 
           {/* "Попап картинки карточки" =>*/}
@@ -278,40 +291,3 @@ function App() {
 }
 
 export default App;
-
-{
-  /* <PopupWithForm
-            title="Новое место"
-            name="cards-setting"
-            buttonText="Создать"
-            isOpen={isAddPlacePopupOpen}
-            onClose={closeAllPopups}
-          >
-            <fieldset className="popup__fieldset">
-              <label className="popup__label">
-                <input
-                  minLength="2"
-                  maxLength="30"
-                  required
-                  className="popup__input popup__input_title"
-                  placeholder="название"
-                  type="text"
-                  name="name"
-                  id="nameInput"
-                />
-                <span className="nameInput-error popup__input-error"></span>
-              </label>
-              <label className="popup__label">
-                <input
-                  required
-                  className="popup__input popup__input_url"
-                  placeholder="Ссылка на картинку"
-                  type="url"
-                  name="link"
-                  id="urlImput"
-                />
-                <span className="urlImput-error popup__input-error"></span>
-              </label>
-            </fieldset>
-          </PopupWithForm> */
-}

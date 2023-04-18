@@ -1,9 +1,9 @@
-import React from "react";
+import { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
 function AddPlacePopup({ isOpen, onClose, onUpdateCard }) {
-  const [name, setName] = React.useState("");
-  const [link, setLink] = React.useState("");
+  const [name, setName] = useState("");
+  const [link, setLink] = useState("");
 
   function handleChange(e) {
     e.target.name == "name" ? setName(e.target.value) : setLink(e.target.value);

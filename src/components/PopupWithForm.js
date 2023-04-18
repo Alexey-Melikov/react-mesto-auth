@@ -1,5 +1,3 @@
-import React from "react";
-
 
 function PopupWithForm({ isOpen, name, onClose, title, buttonText, children, onSubmit }) {
   const className = `popup ${isOpen ? "popup_opened" : ""}`;
