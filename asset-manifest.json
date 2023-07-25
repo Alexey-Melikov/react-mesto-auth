@@ -1,0 +1,30 @@
+{
+  "files": {
+    "main.css": "/react-mesto-auth/static/css/main.68b45f99.css",
+    "main.js": "/react-mesto-auth/static/js/main.9331d2b2.js",
+    "static/js/787.5530211c.chunk.js": "/react-mesto-auth/static/js/787.5530211c.chunk.js",
+    "static/media/Inter-Black.woff": "/react-mesto-auth/static/media/Inter-Black.fd37f7e052bea1018058.woff",
+    "static/media/Inter-Medium.woff": "/react-mesto-auth/static/media/Inter-Medium.7ddb89dcdb33dd761944.woff",
+    "static/media/Inter-Regular.woff": "/react-mesto-auth/static/media/Inter-Regular.34ed58565339f4f3be40.woff",
+    "static/media/Inter-Black.woff2": "/react-mesto-auth/static/media/Inter-Black.141c7af6ed109b318513.woff2",
+    "static/media/Inter-Medium.woff2": "/react-mesto-auth/static/media/Inter-Medium.6db7e439cc4b0e5c0cd2.woff2",
+    "static/media/Inter-Regular.woff2": "/react-mesto-auth/static/media/Inter-Regular.4c96ed73beaf6d1e6cc7.woff2",
+    "static/media/header-logo.svg": "/react-mesto-auth/static/media/header-logo.03b78ada3425e9132ff3db7ea8f4a6f6.svg",
+    "static/media/Heart-disabled.svg": "/react-mesto-auth/static/media/Heart-disabled.87ed371465c7a6a1cd01.svg",
+    "index.html": "/react-mesto-auth/index.html",
+    "static/media/not-successful-logo.svg": "/react-mesto-auth/static/media/not-successful-logo.d4ce2a261b68c6da973d51ef98afae1a.svg",
+    "static/media/Vector-trash.svg": "/react-mesto-auth/static/media/Vector-trash.823b0cf1b0b7e9cb7cad.svg",
+    "static/media/successful-logo.svg": "/react-mesto-auth/static/media/successful-logo.a9eb6caf1da3ff48b215fb1dd9477d74.svg",
+    "static/media/Heart-active.svg": "/react-mesto-auth/static/media/Heart-active.fe17a515669479b1e649.svg",
+    "static/media/vectop-pen.svg": "/react-mesto-auth/static/media/vectop-pen.8667ac4a523e8fc42e59.svg",
+    "static/media/vector-cross-close.svg": "/react-mesto-auth/static/media/vector-cross-close.2ceb783afbab75916ddc.svg",
+    "static/media/vector-cross.svg": "/react-mesto-auth/static/media/vector-cross.d86bb2edc2f6eadb96b7.svg",
+    "main.68b45f99.css.map": "/react-mesto-auth/static/css/main.68b45f99.css.map",
+    "main.9331d2b2.js.map": "/react-mesto-auth/static/js/main.9331d2b2.js.map",
+    "787.5530211c.chunk.js.map": "/react-mesto-auth/static/js/787.5530211c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.68b45f99.css",
+    "static/js/main.9331d2b2.js"
+  ]
+}
