@@ -10,6 +10,7 @@
   background-color: transparent;
   border-bottom: 2px solid #ccc;
   padding: 0 0 9px;
+  outline: none;
 }
 
 @media screen and (max-width: 588px) {

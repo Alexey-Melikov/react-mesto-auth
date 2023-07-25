@@ -5,3 +5,9 @@
   text-align: right;
   color: #fff;
 }
+
+@media screen and (max-width: 588px) {
+  .header__auth-email {
+    display: none;
+  }
+}

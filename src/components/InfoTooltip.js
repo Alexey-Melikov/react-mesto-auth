@@ -12,7 +12,11 @@ function InfoTooltip({ onClose, isOpen, tooltipStatus }) {
           onClick={onClose}
           className="popup-image__close-button popup__close-button button-hover"
         ></button>
-        <img src={tooltipStatus.image} className="popup__infoTooltip-image" />
+        <img
+          alt="Изображение с результатом"
+          src={tooltipStatus.image}
+          className="popup__infoTooltip-image"
+        />
         <h2 className="popup__infoTooltip-title">{tooltipStatus.text}</h2>
       </div>
     </section>

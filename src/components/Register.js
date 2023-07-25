@@ -1,51 +1,86 @@
-import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { REGEXP_EMAIL } from "../utils/utils";
+import { useEffect, useState } from "react";
 
 function Register({ handleRegister }) {
-  const [formValue, setFormValue] = useState({ email: "", password: "" });
+  const [subButtonClassName, setSubButtonClassName] = useState(
+    "auth__button auth__button-type-disabled"
+  );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+  } = useForm({ mode: "onChange" });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = formValue;
+  const onSubmit = (data) => {
+    const { email, password } = data;
     handleRegister(email, password);
   };
+
+  useEffect(() => {
+    isValid
+      ? setSubButtonClassName("auth__button")
+      : setSubButtonClassName("auth__button auth__button-type-disabled");
+  }, [isValid]);
 
   return (
     <div className="auth">
       <form
         className="auth__form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         name="register"
         id="register-form"
+        noValidate
       >
         <h2 className="auth__title">Регистрация</h2>
+
         <input
           className="auth__input"
           name="email"
           placeholder="Email"
-          onChange={handleChange}
           type="email"
-          value={formValue.email}
-          id="auth-email-input"
+          required
+          {...register("email", {
+            required: "Это поле обязазательно для заполнения",
+            pattern: {
+              value: REGEXP_EMAIL,
+              message: "Здесь должен быть корректный e-mail",
+            },
+          })}
         ></input>
+
+        <span className="form__error-span">
+          {errors.email ? errors.email.message : ""}
+        </span>
+
         <input
           className="auth__input"
           name="password"
           placeholder="Пароль"
-          onChange={handleChange}
           type="password"
-          value={formValue.password}
-          id="auth-password-input"
+          {...register("password", {
+            required: "Это поле обязазательно для заполнения",
+            minLength: {
+              value: "4",
+              message: `Текст должен быть не короче 4 символов `,
+            },
+          })}
         ></input>
-        <button className="auth__button" type="submit" id="auth-submit-button">
+        <span className="form__error-span">
+          {errors.password
+            ? errors.password.type === "minLength"
+              ? `${errors.password.message} Сейчас: ${watch("password").length}`
+              : errors.password.message
+            : ""}
+        </span>
+        <button
+          className={subButtonClassName}
+          type="submit"
+          id="auth-submit-button"
+        >
           Зарегистрироваться
         </button>
         <Link to="/sign-in" className="auth__link">

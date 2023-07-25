@@ -1,24 +1,23 @@
-.header__auth-button {
+.header__auth-link {
   font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 22px;
   color: #fff;
-  border: none;
-  background-color: #000;
-  margin-left: 24px;
   padding: 0;
   cursor: pointer;
   text-decoration: none;
+  height: min-content;
+  padding-top: 5px;
 }
 
-.header__auth-button:hover {
+.header__auth-link:hover {
   opacity: 0.6;
 }
 
-
 @media screen and (max-width: 588px) {
-  .header__auth-button {
-    display: none;
+  .header__auth-link {
+    padding-right: 27px;
+    font-size: 15px;
   }
 }

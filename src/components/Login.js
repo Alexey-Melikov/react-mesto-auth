@@ -1,21 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { REGEXP_EMAIL } from "../utils/utils";
 
 function Login({ handleAuthorize }) {
-  const [formValue, setFormValue] = useState({ email: "", password: "" });
+  const [subButtonClassName, setSubButtonClassName] = useState(
+    "auth__button auth__button-type-disabled"
+  );
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+    watch,
+  } = useForm({ mode: "onChange" });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = formValue;
+  const onSubmit = (data) => {
+    const { email, password } = data;
     handleAuthorize(email, password);
   };
+
+  useEffect(() => {
+    isValid
+      ? setSubButtonClassName("auth__button")
+      : setSubButtonClassName("auth__button auth__button-type-disabled");
+  }, [isValid]);
 
   return (
     <div className="auth">
@@ -23,28 +31,52 @@ function Login({ handleAuthorize }) {
         className="auth__form"
         name="register"
         id="register-form"
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
+        noValidate
       >
         <h2 className="auth__title">Вход</h2>
+
         <input
           className="auth__input"
-          onChange={handleChange}
+          type="email"
           name="email"
           placeholder="Email"
-          type="email"
-          //value={""} HERE
-          id="auth-email-input"
+          {...register("email", {
+            required: "Это поле обязательно для заполнения",
+            pattern: {
+              value: REGEXP_EMAIL,
+              message: "Здесь должен быть корректный e-mail",
+            },
+          })}
         ></input>
+        <span className="form__error-span">
+          {errors.email ? errors.email.message : ""}
+        </span>
         <input
           className="auth__input"
-          onChange={handleChange}
           name="password"
           placeholder="Пароль"
           type="password"
-          //value={""} HERE
-          id="auth-password-input"
+          {...register("password", {
+            required: "Это поле обязательно для заполнения",
+            minLength: {
+              value: "4",
+              message: `Текст должен быть не короче 4 символов `,
+            },
+          })}
         ></input>
-        <button className="auth__button" type="submit" id="auth-submit-button">
+        <span className="form__error-span">
+          {errors.password
+            ? errors.password.type === "minLength"
+              ? `${errors.password.message} Сейчас: ${watch("password").length}`
+              : errors.password.message
+            : ""}
+        </span>
+        <button
+          className={subButtonClassName}
+          type="submit"
+          id="auth-submit-button"
+        >
           Войти
         </button>
       </form>

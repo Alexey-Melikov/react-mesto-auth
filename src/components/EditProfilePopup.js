@@ -1,35 +1,32 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import { useForm } from "react-hook-form";
 
 function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
   // Context =>
   const currentUser = useContext(CurrentUserContext);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  function onSubmit(data) {
+    onUpdateUser(data);
+  }
 
-  // После загрузки текущего пользователя из API
-  // его данные будут использованы в управляемых компонентах.
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({
+    mode: "onChange",
+  });
+
+  // Эффект устанавливает значения полей по умолчанию из контекста текущего пользователя
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser, isOpen]);
-
-  function handleChange(e) {
-    e.target.name == "name"
-      ? setName(e.target.value)
-      : setDescription(e.target.value);
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    // Передаём значения управляемых компонентов во внешний обработчик
-    onUpdateUser({
-      name,
-      about: description,
-    });
-  }
+    setValue("name", currentUser.name);
+    setValue("about", currentUser.about);
+  }, [currentUser, setValue]);
 
   return (
     <PopupWithForm
@@ -38,38 +35,77 @@ function EditProfilePopup({ isOpen, onClose, onUpdateUser }) {
       buttonText="Сохранить"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
+      reset={reset}
+      isValid={isValid}
     >
       <fieldset className="popup__fieldset">
         <label className="popup__label">
           <input
-            value={name || ""}
-            required
-            minLength="2"
-            maxLength="40"
             className="popup__input popup__input_name"
             placeholder="Имя"
             type="text"
             name="name"
-            id="name"
-            onChange={handleChange}
+            {...register("name", {
+              required: "Это поле обязательно для заполнения",
+              minLength: {
+                value: "2",
+                message: "Минимальное кол-во символов 2",
+              },
+              maxLength: {
+                value: "40",
+                message: "Максимальное кол-во символов 40",
+              },
+            })}
           />
-          <span className="name-error popup__input-error"></span>
+          <span
+            className={
+              isValid
+                ? "popup__input-error"
+                : "popup__input-error-active popup__input-error"
+            }
+          >
+            {errors.name
+              ? errors.name.type === "minLength" ||
+                errors.name.type === "maxLength"
+                ? `${errors.name.message} Сейчас: ${watch("name").length}`
+                : errors.name.message
+              : ""}
+          </span>
         </label>
         <label className="popup__label">
           <input
-            value={description || ""}
-            required
-            minLength="2"
-            maxLength="200"
             className="popup__input popup__input_description"
             placeholder="О себе"
             type="text"
             name="about"
-            id="about"
-            onChange={handleChange}
+            // onChange={handleChange}
+            {...register("about", {
+              required: "Это поле обязательно для заполнения",
+              minLength: {
+                value: "2",
+                message: "Минимальное кол-во символов 2",
+              },
+              maxLength: {
+                value: "40",
+                message: "Максимальное кол-во символов 40",
+              },
+            })}
           />
-          <span className="about-error popup__input-error"></span>
+          <span
+            className={
+              isValid
+                ? "popup__input-error"
+                : "popup__input-error-active popup__input-error"
+            }
+          >
+            {errors.about
+              ? errors.about.type === "minLength" ||
+                errors.about.type === "maxLength"
+                ? `${errors.about.message} Сейчас: ${watch("about").length}`
+                : errors.about.message
+              : ""}
+          </span>
         </label>
       </fieldset>
     </PopupWithForm>

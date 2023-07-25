@@ -1,8 +1,30 @@
-function ImagePopup({ card, onClose }) {
+import { useEffect } from "react";
+
+function ImagePopup({ card, onClose, isOpen }) {
   const className = `popup popup-image ${card ? "popup_opened" : " "}`;
 
+  function handleOverlayClose(event) {
+    if (event.target === event.currentTarget && isOpen) {
+      onClose();
+    }
+  }
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscapeClose = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscapeClose);
+    return () => document.removeEventListener("keydown", handleEscapeClose);
+  }, [isOpen, onClose]);
+
   return (
-    <section id="popup-image" className={className}>
+    <section
+      onMouseDown={handleOverlayClose}
+      id="popup-image"
+      className={className}
+    >
       <figure className="popup-image__figure">
         <button
           aria-label="Кнопка закрытия окна"

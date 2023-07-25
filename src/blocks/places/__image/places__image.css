@@ -7,4 +7,10 @@
   background-color: black;
   color: white;
   cursor: pointer;
+  transition: 0.5s;
+}
+
+.places__image:hover {
+  transform: scale(1.1);
+  z-index: 0;
 }

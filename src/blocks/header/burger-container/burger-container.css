@@ -1,0 +1,21 @@
+.burger-container {
+  height: 0px;
+  transition: all 0.3s ease-in-out;
+}
+
+.burger-container.active {
+  height: 140px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 589px) {
+  .burger-container {
+    display: none;
+  }
+  .burger-container.active {
+    display: none;
+  }
+}

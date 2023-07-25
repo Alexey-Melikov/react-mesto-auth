@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Routes, Navigate, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 //image =>
 import successImage from "../images/logo/successful-logo.svg";
@@ -29,6 +29,7 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isTooltipPopupOpen, setIsTooltipPopupOpen] = useState(false);
+  // const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState(null);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -59,7 +60,7 @@ function App() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -255,7 +256,11 @@ function App() {
           />
 
           {/* "Попап картинки карточки" =>*/}
-          <ImagePopup card={selectedCard} onClose={closeAllPopups} />
+          <ImagePopup
+            isOpen={selectedCard}
+            card={selectedCard}
+            onClose={closeAllPopups}
+          />
 
           {/* "Редактировать профиль" =>*/}
           <EditProfilePopup

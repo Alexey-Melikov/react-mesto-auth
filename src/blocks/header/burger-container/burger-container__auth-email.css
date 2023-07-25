@@ -1,0 +1,14 @@
+.burger-container__auth-email {
+  color: #fff;
+  text-align: center;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+@media screen and (min-width: 589px) {
+  .burger-container__auth-email {
+    display: none;
+  }
+}

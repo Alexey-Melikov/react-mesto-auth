@@ -1,13 +1,22 @@
-import React from "react";
+import { useForm } from "react-hook-form";
+
 import PopupWithForm from "./PopupWithForm";
+import { REGEX_URL } from "../utils/utils";
 
 function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
-  const inputRef = React.useRef("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isValid },
+  } = useForm({ mode: "onChange" });
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    onUpdateAvatar({ url: inputRef.current.value });
+  function onSubmit(data) {
+    const userinfo = { url: data.avatarImput };
+    onUpdateAvatar(userinfo);
+    reset();
   }
+
   return (
     <PopupWithForm
       title="Обновить аватар?"
@@ -15,20 +24,26 @@ function EditAvatarPopup({ isOpen, onClose, onUpdateAvatar }) {
       buttonText="Сохранить"
       isOpen={isOpen}
       onClose={onClose}
-      onSubmit={handleSubmit}
+      onSubmit={handleSubmit(onSubmit)}
+      isValid={isValid}
+      reset={reset}
     >
       <fieldset className="popup__fieldset">
         <label className="popup__label">
           <input
-            ref={inputRef}
             required
             className="popup__input popup__input_avatar"
             placeholder="Ссылка на аватар"
             type="url"
             name="avatarImput"
-            id="avatarImput"
+            {...register("avatarImput", {
+              required: "Это поле обязательно для заполнения",
+              pattern: { value: REGEX_URL, message: "Введите url изображение" },
+            })}
           />
-          <span className="avatarImput-error popup__input-error"></span>
+          <span className="form__error-span">
+            {errors.avatarImput ? errors.avatarImput.message : ""}
+          </span>
         </label>
       </fieldset>
     </PopupWithForm>

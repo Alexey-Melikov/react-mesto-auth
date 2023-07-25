@@ -4,13 +4,13 @@
   font-weight: 400;
   font-size: 12px;
   line-height: 15px;
-  color: #ff0000;
   min-height: 30px;
   max-width: 362px;
-  opacity: 0;
-  border-top: 2px solid #ff0000;
 }
 
+.popup__input-error-active {
+  color: #ff0000;
+}
 @media screen and (max-width: 588px) {
   .popup__input-error {
     width: 242px;
